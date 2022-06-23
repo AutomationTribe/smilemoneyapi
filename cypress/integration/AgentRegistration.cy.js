@@ -22,7 +22,7 @@ describe("Register Agent",function(){
         cy.fixture("agent").then(function(data){
 
             console.log(data.agentRegister.invalidEmail);
-           this.email =  data.agentRegister.email;
+            this.email =  data.agentRegister.email;
             this.bvn  = data.agentRegister.bvn;
             this.nin = data.agentRegister.nin;
             this.password = data.agentRegister.password;
@@ -36,7 +36,7 @@ describe("Register Agent",function(){
     })
 
     
-    it.only("should not register an agent with invalid BVN",function(){
+    it("should not register an agent with invalid BVN",function(){
         cy.request({
             method: "POST",
             url:"https://smilemoney-sandbox.renmoney.com/agent/registration",
@@ -54,7 +54,7 @@ describe("Register Agent",function(){
            expect(response.body.message).to.eq("Invalid BVN");
         })
     })
-    it("should register an valid agent",function(){
+    it("should not register an agent with invalid NIN",function(){
             cy.request({
                 method: "POST",
                 url:"https://smilemoney-sandbox.renmoney.com/agent/registration",
@@ -62,15 +62,34 @@ describe("Register Agent",function(){
                 body:{
                     "email":this.email,
                     "bvn" : this.bvn,
-                    "nin":this.nin,
+                    "nin":this.invalidNIN,
                     "password" : this.password,
                     "networkKey" : this.networkKey
                 }
             }).should((response) =>{
-                expect(response.status).to.eq(200);
-                expect(response.body.status).to.eq("successful");
-               // expect(response.body.message).to.eq("User found");
+                expect(response.status).to.eq(400);
+                expect(response.body.status).to.eq("failed");
+                expect(response.body.message).to.eq("Invalid NIN");
             })
+    })
+
+    it("should successfully register an agent ",function(){
+        cy.request({
+            method: "POST",
+            url:"https://smilemoney-sandbox.renmoney.com/agent/registration",
+            failOnStatusCode: false,
+            body:{
+                "email":this.email,
+                "bvn" : this.bvn,
+                "nin":this.nin,
+                "password" : this.password,
+                "networkKey" : this.networkKey
+            }
+        }).should((response) =>{
+            expect(response.status).to.eq(200);
+            expect(response.body.status).to.eq("successful");
+            expect(response.body.message).to.eq("Agent created successfully");
+        })
     })
 
     it("should not register an already existing agent",()=>{
@@ -79,16 +98,16 @@ describe("Register Agent",function(){
                     url:"https://smilemoney-sandbox.renmoney.com/agent/registration",
                     failOnStatusCode: false,
                     body:{
-                        "email":this.email,
-                        "bvn" : this.bvn,
-                        "nin":this.nin,
-                        "password" : this.password,
-                        "networkKey" : this.networkKey
+                        "email":"austin@yopmail.com",
+                        "bvn" : "22271677774",
+                        "nin":"34299589242",
+                        "password" : "NoLimit@2022",
+                        "networkKey" : "4342424"
                     }
                 }).should((response) =>{
                     expect(response.status).to.eq(406);
                     expect(response.body.status).to.eq("failed");
-                    expect(response.body.message).to.eq("Agent email address already exist");
+                    expect(response.body.message).to.eq("BVN already exist");
                 })
             })
    
