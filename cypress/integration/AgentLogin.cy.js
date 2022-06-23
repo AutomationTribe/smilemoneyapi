@@ -1,13 +1,22 @@
 ///<reference types="cypress" />
 describe("Agent Login",function(){
+    before("Load data from fixture",function(){
+        cy.fixture("agent").then(function(data){
+
+            this.email = data.agentLogin.email;
+            this.password = data.agentLogin.password;
+            this.invalidEmail = data.agentLogin.invalidEmail;
+            this.invalidPassword = data.agentLogin.invalidPassword;
+        })
+    })
     it("should log agent in with valid email and password",function(){
         cy.request({
             method:"POST",
             url: "https://smilemoney-sandbox.renmoney.com/agent/login",
             failOnStatusCode: false,
             body:{
-                "email": "wolerevo34@tmail.com",
-                "password": "password",
+                "email": this.email,
+                "password": this.password,
                 "networkKey": "4342424"
             }
         }).should((response)=> {
@@ -26,14 +35,14 @@ describe("Agent Login",function(){
             url: "https://smilemoney-sandbox.renmoney.com/agent/login",
             failOnStatusCode: false,
             body:{
-                "email": "wolerevo35@tmail.com",
-                "password": "password",
+                "email": this.invalidEmail,
+                "password": this.invalidPassword,
                 "networkKey": "4342424"
             }
         }).should((response)=> {
             expect(response.status).to.eq(400);
             expect(response.body.status).to.eq("failed");
-            expect(response.body.message).to.eq("Invalid login details");
+            expect(response.body.message).to.eq("Invalid email");
 
         })
     })
@@ -62,7 +71,7 @@ describe("Agent Login",function(){
             failOnStatusCode: false,
             body:{
                 "email": "",
-                "password": "password",
+                "password": this.email,
                 "networkKey": "4342424"
             }
         }).should((response)=> {
@@ -79,7 +88,7 @@ describe("Agent Login",function(){
             url: "https://smilemoney-sandbox.renmoney.com/agent/login",
             failOnStatusCode: false,
             body:{
-                "email": "wolerevo35@tmail.com",
+                "email": this.email,
                 "password": "",
                 "networkKey": "4342424"
             }
