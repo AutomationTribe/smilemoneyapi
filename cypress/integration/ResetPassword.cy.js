@@ -1,8 +1,16 @@
 ///<reference types="cypress" />
 
 let otp,resetToken;
-describe("Reset password", ()=>{
-    it("should reset password",()=>{
+describe("Reset password", function(){
+
+    before("Get Reset Token and OTP from fixture",function(){
+        cy.fixture("passwordrecovery").then(function(data){
+            this.token = data.reset_token;
+            this.otp = data.otp;
+        })
+
+    })
+    it("should reset password",function(){
 
 
         cy.fixture('passwordrecovery').then((data)=>{
@@ -12,8 +20,8 @@ describe("Reset password", ()=>{
                 "method":"POST",
                 "url":"https://smilemoney-sandbox.renmoney.com/agent/reset_password",
                 "body":{
-                    "otp": data.otp,
-                    "token": data.resetToken,
+                    "otp": this.otp,
+                    "token": this.token,
                     "password": "chemistry",
                     "networkKey": "8437483748343"
     
@@ -23,6 +31,7 @@ describe("Reset password", ()=>{
     
                 expect(response.status).to.eq(200);
                 expect(response.body.status).to.eq('successful');
+                expect(response.body.message).to.eq('Password reset succcessful');
             })
         })
        
