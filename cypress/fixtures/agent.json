@@ -1,0 +1,21 @@
+{
+        "agentRegister":{
+            "email":"adada@yopmail.com",
+            "bvn" : "22200279145",
+            "nin":"55345376897",
+            "password" : "NoLimit@2022",
+            "networkKey" : "4342424",
+            "invalidEmail":"justin",
+            "invalidBVN" :"23243435",
+            "invalidNIN": "1232443",
+            "invalidPassword": "Pass"
+        },
+    
+    "agentLogin" : {
+            "email": "wolerevo34@tmail.com",
+            "password": "password",
+            "networkKey":"4342424",
+            "invalidEmail" : "justin",
+            "invalidPassword":"Pass"
+        }
+} 
