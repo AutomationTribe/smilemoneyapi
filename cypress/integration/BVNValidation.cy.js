@@ -1,12 +1,22 @@
 ///<reference types="cypress" />
 
 describe("BVN Validation",function(){
-    it("should validate valid BVN",()=>{
+
+    before("Load BVN data from fixture",function(){
+
+        cy.fixture("BVN").then(function(data){
+           // console.log(data.validBVN);
+            this.validBVN = data.validBVN;
+            this.invalidBVN = data.invalidBVN;
+        })
+
+    })
+    it("should validate valid BVN",function(){
         cy.request({
             method:"POST",
             url:"https://smilemoney-sandbox.renmoney.com/agent/bvn_validation",
             body: {
-                "bvn": "22150443595"
+                "bvn": this.validBVN
             }
         }).should((response) =>{
             expect(response.status).to.eq(200)
@@ -15,13 +25,13 @@ describe("BVN Validation",function(){
         });
     })
 
-    it("should not validate invalid BVN",()=>{
+    it("should not validate invalid BVN",function(){
         cy.request({
             method:"POST",
             url:"https://smilemoney-sandbox.renmoney.com/agent/bvn_validation",
             failOnStatusCode : false,
             body: {
-                "bvn": "221504435x5"
+                "bvn": this.invalidBVN
             }
         }).should((response) =>{
             expect(response.status).to.eq(404)
