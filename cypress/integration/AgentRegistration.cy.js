@@ -1,7 +1,7 @@
 ///<reference types="cypress" />
 
 describe("Register Agent",function(){
-    before("Check if an agent exists",()=>{
+    before("Check if an agent exists",function(){
 
         //cy.authenticate().as("authToken");
 
@@ -18,19 +18,53 @@ describe("Register Agent",function(){
             }
 
         })
+
+        cy.fixture("agent").then(function(data){
+
+            console.log(data.agentRegister.invalidEmail);
+           this.email =  data.agentRegister.email;
+            this.bvn  = data.agentRegister.bvn;
+            this.nin = data.agentRegister.nin;
+            this.password = data.agentRegister.password;
+            this.networkKey = data.agentRegister.networkKey;
+
+            this.invalidEmail =  data.agentRegister.invalidEmail;
+            this.invalidBVN = data.agentRegister.invalidBVN;
+            this.invalidNIN =data.agentRegister.invalidNIN;
+
+        })
     })
 
-    it("should register a valid agent",()=>{
+    
+    it.only("should not register an agent with invalid BVN",function(){
+        cy.request({
+            method: "POST",
+            url:"https://smilemoney-sandbox.renmoney.com/agent/registration",
+            failOnStatusCode: false,
+            body:{
+                "email":this.email,
+                "bvn" : this.invalidBVN,
+                "nin":this.nin,
+                "password" : this.password,
+                "networkKey" : this.networkKey
+            }
+        }).should((response) =>{
+           expect(response.status).to.eq(400);
+           expect(response.body.status).to.eq("failed");
+           expect(response.body.message).to.eq("Invalid BVN");
+        })
+    })
+    it("should register an valid agent",function(){
             cy.request({
                 method: "POST",
                 url:"https://smilemoney-sandbox.renmoney.com/agent/registration",
                 failOnStatusCode: false,
                 body:{
-                    "email":"adada@yopmail.com",
-                    "bvn" : "22200279145",
-                    "nin":"55345376897",
-                    "password" : "NoLimit@2022",
-                    "networkKey" : "4342424"
+                    "email":this.email,
+                    "bvn" : this.bvn,
+                    "nin":this.nin,
+                    "password" : this.password,
+                    "networkKey" : this.networkKey
                 }
             }).should((response) =>{
                 expect(response.status).to.eq(200);
@@ -45,11 +79,11 @@ describe("Register Agent",function(){
                     url:"https://smilemoney-sandbox.renmoney.com/agent/registration",
                     failOnStatusCode: false,
                     body:{
-                        "email":"adada@yopmail.com",
-                        "bvn" : "22200279145",
-                        "nin":"55345376897",
-                        "password" : "NoLimit@2022",
-                        "networkKey" : "4342424"
+                        "email":this.email,
+                        "bvn" : this.bvn,
+                        "nin":this.nin,
+                        "password" : this.password,
+                        "networkKey" : this.networkKey
                     }
                 }).should((response) =>{
                     expect(response.status).to.eq(406);
