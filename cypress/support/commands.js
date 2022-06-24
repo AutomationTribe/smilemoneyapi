@@ -28,8 +28,8 @@ Cypress.Commands.add('authenticate', (userName, password) => {
         method:'POST', 
         url:'https://smilemoney-sandbox.renmoney.com/agent/login',
         body: {
-            "email": "wolerevo34@tmail.com",
-            "password": "password",
+            "email": "austin@yopmail.com",
+            "password": "NoLimit@2022",
             "networkKey": "4342424"
         }
       })

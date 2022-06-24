@@ -24,7 +24,7 @@ describe("Customer Creation",function(){
     });
 
 
-    it("should create customer",()=>{
+    it("should create customer successfully",()=>{
         cy.get('@authToken').then(($token) =>{
             cy.request({
                 method: "POST",

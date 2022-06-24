@@ -1,14 +1,24 @@
 ///<reference types="cypress" />
 describe("NIN Validation",function(){
 
-    it("should validate valid NIN",function(){
+    before("Load NIN data from fixture",function(){
+        cy.fixture("NIN").then(function(data){
+           // console.log(data.validNIN.nin);
+            this.nin = data.validNIN;
+            this.bvn = data.validBVN;
+            this.invalidNIN = data.invalidNIN;
+            this.invalidBVN =data.invalidBVN;
+        })
+    })
+
+    it.only("should validate valid NIN",function(){
         cy.request({
             method: "POST",
             url: "https://smilemoney-sandbox.renmoney.com/agent/nin_validation",
             failOnStatusCode: false,
             body: {
                 "nin": "34299589242",
-                "bvn": "22271677774"
+                "bvn": "22716777742"
               }
         }).should((response)=>{
             expect(response.status).to.eq(200);

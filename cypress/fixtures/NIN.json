@@ -1,6 +1,6 @@
 {
-    "validNIN" : "",
-    "validBVN" : "",
-    "invalidNIN" : "",
-    "invalidBVN" : ""
+    "validNIN" : "34299589242",
+    "validBVN" : "22716777742",
+    "invalidNIN" : "34199589242",
+    "invalidBVN" : "22716777742"
 }
